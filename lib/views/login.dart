@@ -1,6 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/helpers/screen_dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +31,7 @@ class _LoginState extends State<Login> {
           height: fullHeight(context),
           width: fullWidth(context),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+            padding: pagePadding,
             child: Form(
               key: _formKey,
               child: Column(
@@ -142,7 +143,7 @@ class _LoginState extends State<Login> {
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: buttonPadding,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [

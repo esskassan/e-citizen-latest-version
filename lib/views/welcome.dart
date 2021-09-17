@@ -1,4 +1,5 @@
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_citizen/consts/app_assets.dart';
@@ -34,7 +35,7 @@ class _WelcomePageState extends State<WelcomePage> {
           height: fullHeight(context),
           width: fullWidth(context),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            padding: pagePadding,
             child: ValueListenableBuilder<int>(
                 valueListenable: index,
                 builder: (context, i, _) {
@@ -110,7 +111,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          padding: buttonPadding,
                           child: Row(
                             children: const [
                               Expanded(
@@ -151,7 +152,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              padding: buttonPadding,
                               child: Text(
                                 "J'ai déja un un compte",
                                 textAlign: TextAlign.center,

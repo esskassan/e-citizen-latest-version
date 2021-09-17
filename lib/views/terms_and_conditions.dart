@@ -1,6 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/helpers/screen_dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,7 +24,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
           height: fullHeight(context),
           width: fullWidth(context),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+            padding: pagePadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -55,7 +56,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                         ));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    padding: buttonPadding,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [

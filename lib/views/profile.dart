@@ -1,4 +1,5 @@
 import 'package:e_citizen/consts/app_assets.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/footer.dart';
@@ -16,7 +17,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+          padding: pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -1,6 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/helpers/screen_dimensions.dart';
 import 'package:e_citizen/views/home.dart';
 import 'package:e_citizen/views/show_health_pass.dart';
@@ -27,7 +28,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
           height: fullHeight(context),
           width: fullWidth(context),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: pagePadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -109,7 +110,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    padding: buttonPadding,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [

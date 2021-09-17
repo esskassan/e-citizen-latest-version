@@ -1,6 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/views/widgets/footer.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class _AddHealthPassState extends State<AddHealthPass> {
       body: SafeArea(
         child: LayoutBuilder(builder: (context, constraint) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            padding: pagePadding,
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraint.maxHeight),
               child: IntrinsicHeight(
@@ -175,7 +176,7 @@ class _AddHealthPassState extends State<AddHealthPass> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        padding: buttonPadding,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [

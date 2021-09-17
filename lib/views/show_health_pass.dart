@@ -1,5 +1,6 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/helpers/screen_dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,7 +28,7 @@ class _ShowHealthPassState extends State<ShowHealthPass> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(25, 20, 30, 8),
+                      padding: pagePadding,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

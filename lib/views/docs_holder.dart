@@ -1,6 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/views/add_health_pass.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class _DocsHolderState extends State<DocsHolder> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+          padding: pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

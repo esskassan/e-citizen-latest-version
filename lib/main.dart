@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => FutureBuilder(
-                future: Future.delayed(const Duration(seconds: 5)),
+                future: Future.delayed(const Duration(milliseconds: 300)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return const WelcomePage();

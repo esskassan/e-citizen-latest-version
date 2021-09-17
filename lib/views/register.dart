@@ -1,6 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/consts/values.dart';
 import 'package:e_citizen/helpers/screen_dimensions.dart';
 import 'package:e_citizen/views/verify_phone.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  String? cardType;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,13 +25,27 @@ class _RegisterState extends State<Register> {
           height: fullHeight(context),
           width: fullWidth(context),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+            padding: pagePadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
                 SvgPicture.asset(
                   AppAssets.addUser,
+                ),
+                const SizedBox(height: 10),
+                TextButton.icon(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all(Colors.brown),
+                    textStyle: MaterialStateProperty.all(
+                      AppStyles.information,
+                    ),
+                  ),
+                  icon: const Icon(Icons.warning_amber_outlined),
+                  label: const Text(
+                    "Les informations fournies doivent correspondre à celles de la piéce d'identité",
+                  ),
                 ),
                 const SizedBox(height: 15),
                 const Text(
@@ -37,7 +54,57 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 15),
                 const Text(
-                  "PRÉNOMS",
+                  "TYPE DE CARTE",
+                  style: AppStyles.textFieldLabel,
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  color: AppColors.fillTextFieldColor,
+                  child: DropdownButton<String>(
+                    elevation: 2,
+                    focusColor: Colors.white,
+                    dropdownColor: Colors.white,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    hint: const Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        "Sélectionner un type de carte",
+                        style: TextStyle(color: AppColors.hintColor),
+                      ),
+                    ),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    value: cardType,
+                    items:
+                        /*
+                      CE => Carte d'électeur
+                      10:09 AM
+                      CNI => Carte d'identité
+                      10:09 AM
+                      PP => Passeport
+                      10:09 AM
+                      CMI => Carte d'identité des forces de l'ordre
+                      10:10 AM
+                      XPP => Passeport Etranger
+                      */
+                        <String>[
+                      "Carte d'électeur",
+                      "Carte d'identité",
+                      "Passeport",
+                      "Carte d'identité des forces de l'ordre",
+                      "Passeport Etranger",
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) => setState(() => cardType = value),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                const Text(
+                  "ID DE LA CARTE",
                   style: AppStyles.textFieldLabel,
                 ),
                 const SizedBox(height: 5),
@@ -58,7 +125,7 @@ class _RegisterState extends State<Register> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white, width: 0),
                     ),
-                    hintText: 'Samael',
+                    hintText: 'T2R4Z118305',
                     hintStyle: TextStyle(color: AppColors.hintColor),
                   ),
                 ),
@@ -91,7 +158,7 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 15),
                 const Text(
-                  "NOM DE LA MÈRE",
+                  "PRÉNOMS",
                   style: AppStyles.textFieldLabel,
                 ),
                 const SizedBox(height: 5),
@@ -112,7 +179,7 @@ class _RegisterState extends State<Register> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white, width: 0),
                     ),
-                    hintText: 'ADJO',
+                    hintText: 'Samael',
                     hintStyle: TextStyle(color: AppColors.hintColor),
                   ),
                 ),
@@ -161,48 +228,29 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 15),
                 const Text(
-                  "TYPE DE CARTE",
+                  "NOM DE LA MÈRE",
                   style: AppStyles.textFieldLabel,
                 ),
                 const SizedBox(height: 5),
-                Container(
-                  color: AppColors.fillTextFieldColor,
-                  child: DropdownButton<String>(
-                    elevation: 0,
-                    focusColor: AppColors.fillTextFieldColor,
-                    dropdownColor: AppColors.fillTextFieldColor,
-                    isExpanded: true,
-                    underline: const SizedBox(),
-                    hint: const Text(
-                      "Sélectionner un type de carte",
-                      style: TextStyle(color: AppColors.hintColor),
+                const TextField(
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
                     ),
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items:
-                        /*
-                      CE => Carte d'électeur
-                      10:09 AM
-                      CNI => Carte d'identité
-                      10:09 AM
-                      PP => Passeport
-                      10:09 AM
-                      CMI => Carte d'identité des forces de l'ordre
-                      10:10 AM
-                      XPP => Passeport Etranger
-                      */
-                        <String>[
-                      "Carte d'électeur",
-                      "Carte d'identité",
-                      "Passeport",
-                      "Carte d'identité des forces de l'ordre",
-                      "Passeport Etranger",
-                    ].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (_) {},
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 0),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.fillTextFieldColor,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 0),
+                    ),
+                    hintText: 'ADJO',
+                    hintStyle: TextStyle(color: AppColors.hintColor),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -232,7 +280,7 @@ class _RegisterState extends State<Register> {
                     );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    padding: buttonPadding,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
