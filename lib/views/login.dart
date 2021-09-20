@@ -72,6 +72,8 @@ class _LoginState extends State<Login> {
                                 return "N'oubliez pas le numéro !";
                               } else if (value.length != 8) {
                                 return "Veuillez entrer un numéro de 8 chiffres !";
+                              } else if (num.tryParse(value) == null) {
+                                return "$value n'est pas un numéro valide";
                               }
                               return null;
                             },

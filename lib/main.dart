@@ -7,20 +7,8 @@ import 'package:flutter/services.dart';
 import 'helpers/screen_dimensions.dart';
 
 void main() async {
-  // Avoid errors caused by flutter upgrade.
   WidgetsFlutterBinding.ensureInitialized();
-  // Open the database and store the reference.
-  /* final database = openDatabase(
-    // Set the path to the database.
-    p.join(await getDatabasesPath(), AppNames.dbName),
-    // When first created, store the user data.
-    onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE dogs(id INTEGER PRIMARY KEY, last_name TEXT,first_name TEXT, phone_number INTEGER)',
-      );
-    },
-    version: 1,
-  ); */
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
