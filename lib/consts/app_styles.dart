@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppStyles {
+  static const EdgeInsets pagePadding = EdgeInsets.all(25);
+  static const EdgeInsets buttonPadding = EdgeInsets.symmetric(vertical: 15.0);
+
   static const TextStyle bigTitle = TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 26.67,

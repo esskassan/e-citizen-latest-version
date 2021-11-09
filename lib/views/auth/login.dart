@@ -1,13 +1,12 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
-import 'package:e_citizen/consts/values.dart';
-import 'package:e_citizen/helpers/screen_dimensions.dart';
+
+import 'package:e_citizen/helpers/utils.dart';
+import 'package:e_citizen/views/auth/verify_phone.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'verify_phone.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -19,19 +18,16 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
-  /* Future<bool> getCode() async {
-    return;
-  } */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
-          height: fullHeight(context),
-          width: fullWidth(context),
+          height: Utils.fullHeight(context),
+          width: Utils.fullWidth(context),
           child: Padding(
-            padding: pagePadding,
+            padding: AppStyles.pagePadding,
             child: Form(
               key: _formKey,
               child: Column(
@@ -42,7 +38,6 @@ class _LoginState extends State<Login> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 35),
                           SvgPicture.asset(AppAssets.addUserData),
                           const SizedBox(height: 25),
                           const Text(
@@ -68,28 +63,27 @@ class _LoginState extends State<Login> {
                               FilteringTextInputFormatter.digitsOnly
                             ],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "N'oubliez pas le numéro !";
-                              } else if (value.length != 8) {
-                                return "Veuillez entrer un numéro de 8 chiffres !";
-                              } else if (num.tryParse(value) == null) {
-                                return "$value n'est pas un numéro valide";
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.length > 7) {
+                                return null;
                               }
-                              return null;
+                              return 'Numéro invalide';
                             },
+                            onSaved: (newValue) =>
+                                setState(() => phoneNumber = newValue!),
                             decoration: InputDecoration(
                               prefixIcon: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        left: 10.0, right: 10.0),
+                                        left: 10.0, right: 7.0, bottom: 1.2),
                                     child: Text(
                                       "+228",
                                       style: TextStyle(
-                                        color: AppColors.hintColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16.3,
+                                        color: Colors.black87,
                                       ),
                                     ),
                                   ),
@@ -116,8 +110,6 @@ class _LoginState extends State<Login> {
                               hintText: 'XX XX XX XX',
                               hintStyle: const TextStyle(
                                 color: AppColors.hintColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -130,22 +122,57 @@ class _LoginState extends State<Login> {
                       backgroundColor:
                           MaterialStateProperty.all(AppColors.primaryColor),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
+                        List getCodeResult = await Utils.getCodeFromLogin(
+                          phoneNumber: phoneNumber,
                         );
+                        if (getCodeResult[0] == true &&
+                            getCodeResult.length == 3) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 1, milliseconds: 250),
+                              content: Text(
+                                "Un code vous a été envoyé.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                          await Future.delayed(const Duration(seconds: 1));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VerifyPhone(
+                                token: getCodeResult[1]!,
+                                otp: getCodeResult[2]!,
+                                userMap: {
+                                  'id': "",
+                                  'lastname': "",
+                                  'firstname': "",
+                                  'telephone': phoneNumber,
+                                  'idNum': "",
+                                  'idType': "",
+                                  'email': "",
+                                  'date_naissance': "",
+                                  'profession': "",
+                                  'profile_photo_path': "",
+                                  'token': getCodeResult[1]!
+                                },
+                              ),
+                            ),
+                          );
+                        } else if (getCodeResult[0] == false) {
+                          Utils.showErrorSnackbar(context);
+                        } else {
+                          Utils.showAppErrorSnackbar(context);
+                        }
                       }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifyPhone(),
-                        ),
-                      );
                     },
                     child: Padding(
-                      padding: buttonPadding,
+                      padding: AppStyles.buttonPadding,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [

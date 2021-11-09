@@ -1,12 +1,12 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
-import 'package:e_citizen/consts/values.dart';
+
 import 'package:e_citizen/views/widgets/footer.dart';
 import 'package:flutter/material.dart';
 
 import 'profile.dart';
-import 'verify_phone.dart';
+import 'auth/verify_phone.dart';
 
 class AddHealthPass extends StatefulWidget {
   const AddHealthPass({Key? key}) : super(key: key);
@@ -22,14 +22,13 @@ class _AddHealthPassState extends State<AddHealthPass> {
       body: SafeArea(
         child: LayoutBuilder(builder: (context, constraint) {
           return SingleChildScrollView(
-            padding: pagePadding,
+            padding: AppStyles.pagePadding,
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraint.maxHeight),
               child: IntrinsicHeight(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 15),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,9 +75,9 @@ class _AddHealthPassState extends State<AddHealthPass> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    const TextField(
+                    TextFormField(
                       keyboardType: TextInputType.name,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 12,
                         ),
@@ -110,7 +109,7 @@ class _AddHealthPassState extends State<AddHealthPass> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    TextField(
+                    TextFormField(
                       style: const TextStyle(letterSpacing: 1.0),
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
@@ -118,13 +117,13 @@ class _AddHealthPassState extends State<AddHealthPass> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Padding(
-                              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                              padding: EdgeInsets.only(
+                                  left: 10.0, right: 7.0, bottom: 1.2),
                               child: Text(
                                 "+228",
                                 style: TextStyle(
-                                  color: AppColors.hintColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.3,
+                                  color: Colors.black87,
                                 ),
                               ),
                             ),
@@ -147,8 +146,6 @@ class _AddHealthPassState extends State<AddHealthPass> {
                         hintText: 'XX XX XX XX',
                         hintStyle: const TextStyle(
                           color: AppColors.hintColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -167,16 +164,20 @@ class _AddHealthPassState extends State<AddHealthPass> {
                             MaterialStateProperty.all(AppColors.primaryColor),
                       ),
                       onPressed: () {
+                        //TODO: IMPLEMENT THIS PART
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const VerifyPhone(addHealthPass: true),
+                            builder: (context) => const VerifyPhone(
+                              addHealthPass: true,
+                              token: '',
+                              otp: '',
+                            ),
                           ),
                         );
                       },
                       child: Padding(
-                        padding: buttonPadding,
+                        padding: AppStyles.buttonPadding,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [

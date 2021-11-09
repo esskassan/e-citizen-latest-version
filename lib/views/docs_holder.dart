@@ -1,7 +1,7 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/consts/app_styles.dart';
-import 'package:e_citizen/consts/values.dart';
+
 import 'package:e_citizen/views/add_health_pass.dart';
 import 'package:flutter/material.dart';
 
@@ -21,11 +21,10 @@ class _DocsHolderState extends State<DocsHolder> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: pagePadding,
+          padding: AppStyles.pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 15),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,15 +63,14 @@ class _DocsHolderState extends State<DocsHolder> {
                 ),
               ),
               const SizedBox(height: 15),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddHealthPass(),
-                    ),
-                  );
-                },
+              PopupMenuButton(
+                elevation: 1,
+                offset: const Offset(40, 30),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -91,6 +89,28 @@ class _DocsHolderState extends State<DocsHolder> {
                     ),
                   ],
                 ),
+                onSelected: (value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddHealthPass(),
+                    ),
+                  );
+                },
+                itemBuilder: (context) => const [
+                  PopupMenuItem(
+                    child: Text("Pass sanitaire"),
+                    value: 1,
+                  ),
+                  PopupMenuItem(
+                    child: Text("Casier judiciare"),
+                    value: 2,
+                  ),
+                  PopupMenuItem(
+                    child: Text("Autres"),
+                    value: 3,
+                  )
+                ],
               ),
               const Spacer(),
               const Footer(),

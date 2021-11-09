@@ -12,7 +12,7 @@ class Footer extends StatelessWidget {
         children: [
           SvgPicture.asset(
             AppAssets.blason,
-            height: 80,
+            height: 60,
           ),
           const Text(
             "XXX une application du gouvernement Togolais",
