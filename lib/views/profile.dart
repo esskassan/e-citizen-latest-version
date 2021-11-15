@@ -1,7 +1,9 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_styles.dart';
+import 'package:e_citizen/states/user_state.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/footer.dart';
 
@@ -65,7 +67,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Padding(
                     padding: EdgeInsets.only(right: 8.0),
                     child: Text(
@@ -77,7 +79,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   Flexible(
                     child: Text(
-                      "0834 265 2089",
+                      "${Provider.of<UserState>(context, listen: false).actualUser.cardId}",
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 17,
@@ -90,7 +92,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Padding(
                     padding: EdgeInsets.only(right: 8.0),
                     child: Text(
@@ -102,7 +104,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   Flexible(
                     child: Text(
-                      "ABALO",
+                      "${Provider.of<UserState>(context, listen: false).actualUser.lastname}",
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 17,
@@ -115,7 +117,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Padding(
                     padding: EdgeInsets.only(right: 8.0),
                     child: Text(
@@ -127,7 +129,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   Flexible(
                     child: Text(
-                      "Samael Mikhytarian Eryol Fabrice Dantcheni",
+                      "${Provider.of<UserState>(context, listen: false).actualUser.firstname}",
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 17,
@@ -140,7 +142,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Padding(
                     padding: EdgeInsets.only(right: 8.0),
                     child: Text(
@@ -152,7 +154,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   Flexible(
                     child: Text(
-                      "988 888 00",
+                      "${Provider.of<UserState>(context, listen: false).actualUser.telephone}",
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 17,

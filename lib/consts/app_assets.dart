@@ -13,6 +13,8 @@ class AppAssets {
   static const String healthPass = "assets/images/health_pass.svg";
   static const String profileDefault = "assets/images/profile_default.png";
   static const String qrCode = "assets/images/qr_code.png";
+  static const String porte_docs = "assets/images/porte-docs.jpg";
+  static const String contact = "assets/images/contact.png";
 
   ///ICONS
 
