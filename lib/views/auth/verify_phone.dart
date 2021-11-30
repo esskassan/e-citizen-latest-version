@@ -142,7 +142,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                             );
                             await Provider.of<DatabaseState>(context,
                                     listen: false)
-                                .db
+                                .db!
                                 .insert(
                                   AppNames.dbUserTable,
                                   dUser.toMap(),

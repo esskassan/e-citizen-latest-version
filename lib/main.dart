@@ -1,9 +1,11 @@
+import 'package:e_citizen/views/docs_list.dart';
+import 'package:e_citizen/views/view_document.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-
+import 'package:sqflite/sqflite.dart';
 import 'consts/app_assets.dart';
 import 'consts/app_colors.dart';
 import 'consts/app_names.dart';
@@ -13,8 +15,6 @@ import 'states/database_state.dart';
 import 'states/user_state.dart';
 import 'views/home.dart';
 import 'views/auth/welcome.dart';
-
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 
 void main() async {
@@ -56,15 +56,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<Database> initializeDB() async => openDatabase(
-        p.join(await getDatabasesPath(), AppNames.dbName),
-        onCreate: (db, version) {
-          return db.execute(
-            "CREATE TABLE ${AppNames.dbUserTable}(${AppNames.dbUserColumnId} INTEGER PRIMARY KEY, ${AppNames.dbUserColumnFirstName} TEXT, ${AppNames.dbUserColumnLastName} TEXT, ${AppNames.dbUserColumnPhoneNumber} TEXT, ${AppNames.dbUserColumnCardId} TEXT, ${AppNames.dbUserColumnCardType} TEXT, ${AppNames.dbUserColumnEmail} TEXT, ${AppNames.dbUserColumnBirthDay} TEXT, ${AppNames.dbUserColumnProfession} TEXT,${AppNames.dbUserColumnPhoto} TEXT, ${AppNames.dbUserColumnToken} TEXT)",
-          );
-        },
-        version: AppNames.dbVersion,
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +85,7 @@ class _MyAppState extends State<MyApp> {
         initialRoute: '/',
         routes: {
           '/': (context) => FutureBuilder<Database>(
-                future: initializeDB(),
+                future: DatabaseState.initializeDB(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     EasyLoading.dismiss();
@@ -103,11 +94,20 @@ class _MyAppState extends State<MyApp> {
                       db.query(AppNames.dbUserTable).then(
                         (List<Map<String, dynamic>> maps) {
                           print("DB MAPS : " + maps.toString());
-                          Provider.of<DatabaseState>(context, listen: false)
-                              .db = db;
+                          Provider.of<DatabaseState>(context, listen: false).db = db;
                           if (maps.isNotEmpty) {
                             Provider.of<UserState>(context, listen: false)
                                 .actualUser = Users.fromDB(maps[0]);
+
+                            db.query(AppNames.masterTableName).then(
+                                  (List<Map<String, dynamic>> maps2) {
+                                if (maps2.isNotEmpty) {
+                                  print("DB MAPS 2: " + maps2.toString());
+                                } else {
+                                  print("DB MAPS 2: vide");
+                                }
+                              },
+                            );
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -161,6 +161,8 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
           WelcomePage.id: (context) => const WelcomePage(),
+          DocsList.route: (context) => DocsList(),
+          ViewDocument.route: (context) => ViewDocument(),
         },
       ),
     );

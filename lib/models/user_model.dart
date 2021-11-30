@@ -1,14 +1,28 @@
+import 'package:hive/hive.dart';
+
+@HiveType(typeId: 0)
 class Users {
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final String lastname;
+  @HiveField(2)
   final String firstname;
+  @HiveField(3)
   final String telephone;
+  @HiveField(4)
   final String cardId;
+  @HiveField(5)
   final String cardType;
+  @HiveField(6)
   final String? email;
+  @HiveField(7)
   final String? age;
+  @HiveField(8)
   final String? profession;
+  @HiveField(9)
   final String? photo;
+  @HiveField(10)
   final String token;
 
   Users({

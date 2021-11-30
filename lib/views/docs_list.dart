@@ -1,382 +1,480 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:e_citizen/consts/app_assets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:io';
 
-import 'add_health_pass.dart';
-import 'add_id_doc.dart';
-import 'add_personnal_doc.dart';
-import 'add_travel_doc.dart';
+import 'package:e_citizen/consts/app_assets.dart';
+import 'package:e_citizen/consts/app_colors.dart';
+import 'package:e_citizen/dao/directory_os_dao.dart';
+import 'package:e_citizen/models/directory_model.dart';
+import 'package:e_citizen/states/database_state.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
+import 'auth/welcome.dart';
 import 'home.dart';
-import 'profile.dart';
-import 'widgets/footer.dart';
+import 'widgets/FAB.dart';
+import 'view_document.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 class DocsList extends StatefulWidget {
-  List<String> item = ["Carte nationale d'identité","Passeport","Laisser-passer","Visa",
-    "Carte de séjour", "Passe covid-19", "Permis de conduire"];
+  static String route = "DocsList";
+
   @override
-  _DocsList createState() => _DocsList();
+  _DocsListState createState() => _DocsListState();
 }
 
-class Document extends StatelessWidget {
-  const Document({ required this.title, required this.author, required this.nombre });
+class _DocsListState extends State<DocsList> with TickerProviderStateMixin {
+  QuickActions quickActions = QuickActions();
 
-  final String title;
-  final String author;
-  final int nombre;
-
-  @override
-  Widget build(BuildContext context) {
-    TextTheme textTheme = Theme
-        .of(context)
-        .textTheme;
-    return new Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-      decoration: new BoxDecoration(
-        color: Colors.grey.shade200.withOpacity(0.3),
-        borderRadius: new BorderRadius.circular(5.0),
-      ),
-      child: new IntrinsicHeight(
-        child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            new Container(
-              margin: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 10.0),
-              child: new CircleAvatar(
-                backgroundImage: AssetImage('assets/images/porte-docs.jpg'),
-                radius: 20.0,
-              ),
-            ),
-            new Expanded(
-              child: InkWell(
-              child: new Container(
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    new Text(title, style: textTheme.subtitle1),
-                    new Text(author, style: textTheme.caption),
-                  ],
-                ),
-              ),
-                onTap: () {
-                print("tapped on container");
-              },
-              ),
-            ),
-            new Container(
-              margin: new EdgeInsets.symmetric(horizontal: 5.0),
-              child: new InkWell(
-                child: new Icon(Icons.play_arrow, size: 40.0),
-                onTap: () {
-                  // TODO(implement)
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future homeRefresh() async {
+    setState(() {});
   }
-}
-
-class Afficher extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new ListView(
-      children: [
-        new Document(title: 'Carte nationale d\'identité', author: 'Expire le 20/12/2022', nombre: 1),
-        new Document(title: 'Passport', author: 'Expire le 20/12/2025', nombre: 1),
-        new Document(title: 'Laisser-passer', author: 'Expire le 20/12/2022', nombre: 1),
-        new Document(title: 'Visa', author: 'Expire le 20/12/2022', nombre: 0),
-        new Document(title: 'Carte de séjour', author: 'Expire le 20/12/2022', nombre: 0,),
-        new Document(title: 'Passe covid-19', author: 'Expire le 20/12/2022', nombre: 0,),
-        new Document(title: 'Permis de conduire', author: 'Expire le 20/12/2022', nombre: 1,),
-      ],
-    );
-  }
-}
-
-class CustomTabBar extends AnimatedWidget implements PreferredSizeWidget {
-  CustomTabBar({ required this.pageController, required this.pageNames })
-      : super(listenable: pageController);
-
-  final PageController pageController;
-  final List<String> pageNames;
 
   @override
-  final Size preferredSize = new Size(0.0, 40.0);
+  void initState() {
+    super.initState();
 
-  @override
-  Widget build(BuildContext context) {
-    TextTheme textTheme = Theme
-        .of(context)
-        .textTheme;
-    return new Container(
-      height: 40.0,
-      margin: const EdgeInsets.all(10.0),
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      decoration: new BoxDecoration(
-        color: Colors.grey.shade800.withOpacity(0.5),
-        borderRadius: new BorderRadius.circular(20.0),
-      ),
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: new List.generate(pageNames.length, (int index) {
-          return new InkWell(
-              child: new Text(
-                  pageNames[index],
-                  style: textTheme.subtitle1!.copyWith(
-                    color: Colors.black.withOpacity(
-                      index == pageController.page ? 1.0 : 0.2,
-                    ),
-                  )
+    // Quick Action related
+    quickActions.initialize((String shortcutType) {
+      switch (shortcutType) {
+        case 'Normal Scan':
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewDocument(
+                quickScan: false,
+                directoryOS: DirectoryOS(),
               ),
-              onTap: () {
-                pageController.animateToPage(
-                  index,
-                  curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 300),
-                );
-              }
+            ),
+          ).whenComplete(() {
+            homeRefresh();
+          });
+          break;
+        case 'Quick Scan':
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewDocument(
+                quickScan: true,
+                directoryOS: DirectoryOS(),
+              ),
+            ),
+          ).whenComplete(() {
+            homeRefresh();
+          });
+          break;
+        case 'Import from Gallery':
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewDocument(
+                quickScan: false,
+                directoryOS: DirectoryOS(),
+                fromGallery: true,
+              ),
+            ),
+          ).whenComplete(() {
+            homeRefresh();
+          });
+          break;
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      ShortcutItem(
+        type: 'Normal Scan',
+        localizedTitle: 'Normal Scan',
+        icon: 'normal_scan',
+      ),
+      ShortcutItem(
+        type: 'Quick Scan',
+        localizedTitle: 'Quick Scan',
+        icon: 'quick_scan',
+      ),
+      ShortcutItem(
+        type: 'Import from Gallery',
+        localizedTitle: 'Import from Gallery',
+        icon: 'gallery_action',
+      ),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ),
           );
-        })
-            .toList(),
-      ),
-    );
-  }
-}
-
-class _DocsList extends State<DocsList> {
-
-  PageController _pageController = new PageController(initialPage: 2);
-
-  @override
-  build(BuildContext context) {
-    final Map<String, Widget> pages = <String, Widget>{
-      'Cocher': new Center(
-        child: new Text('My Document not implemented'),
-      ),
-      'Partager': new Center(
-        child: new Text('Shared not implemented'),
-      ),
-      'Afficher': new Afficher(),
-    };
-    TextTheme textTheme = Theme
-        .of(context)
-        .textTheme;
-    return new Stack(
-      children: [
-        new Container(
-            decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    const Color.fromARGB(255, 255, 255, 255),
-                    const Color.fromARGB(255, 255, 255, 255),
-                  ],
-                  stops: [0.0, 1.0],
-                )
+          return true;},
+        child: SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0xFFe8e7e3),
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: AppColors.primaryColor,
+          title: RichText(
+            text: TextSpan(
+              text: 'E-',
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600,color: AppColors.secondaryColor),
+              children: [
+                TextSpan(text: 'Citizen', style: TextStyle(color: AppColors.secondaryColor))
+              ],
             ),
-            child: new Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: new Container(
-                  padding: const EdgeInsets.all(10.0),
-                )
-            )
+          ),
         ),
-        new Scaffold(
-          backgroundColor: const Color(0x00000000),
-          appBar: new AppBar(
-            backgroundColor: const Color(0x00000000),
-            elevation: 0.0,
-            leading: new Center(
-              child: new ClipOval(
-                child: Image.asset(
-                  AppAssets.profileDefault,
-                  height: 50,
-                  fit: BoxFit.fill,
-                ),
+        drawer: Container(
+          width: size.width * 0.55,
+          color: Color(0xFFe8e7e3),
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              SvgPicture.asset(
+                AppAssets.fingerPrint,
+                height: 90,
               ),
-            ),
-            actions: [
-              new IconButton(
-                icon: new Icon(Icons.add,
-                  color: Colors.blue.shade400,),
-                onPressed: () {
-                  Navigator.push(
-                    context,
+              Spacer(),
+              Divider(
+                thickness: 0.2,
+                indent: 6,
+                endIndent: 6,
+                color: Colors.black26,
+              ),
+              ListTile(
+                title: Text(
+                    'Home',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const AddPersonnalDoc(),
+                      builder: (context) => HomePage(),
                     ),
                   );
                 },
               ),
+              Divider(
+                thickness: 0.2,
+                indent: 6,
+                endIndent: 6,
+                color: Colors.black26,
+              ),
+              ListTile(
+                title: Text(
+                    'User guide',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WelcomePage(),
+                    ),
+                  );
+                },
+              ),
+              Divider(
+                thickness: 0.2,
+                indent: 6,
+                endIndent: 6,
+                color: Colors.black26,
+              ),
+              Spacer(
+                flex: 9,
+              ),
+              IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () => Navigator.pop(context),
+                color: AppColors.secondaryColor,
+              ),
+              Spacer(),
             ],
-            title: const Text('Mes documents',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: 20.5557,
-              ),),
-            bottom: new CustomTabBar(
-              pageController: _pageController,
-              pageNames: pages.keys.toList(),
-            ),
           ),
-          body: new PageView(
-            controller: _pageController,
-            children: pages.values.toList(),
-          ),
-            bottomNavigationBar: CurvedNavigationBar(
-            backgroundColor: Colors.blueAccent,
-            items: <Widget>[
-            Icon(Icons.add, size: 30),
-        Icon(Icons.list, size: 30),
-        Icon(Icons.compare_arrows, size: 30),
-      ],
-      onTap: (index) {
-        if(index==0) {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: new Icon(Icons.person_add),
-                      title: new Text('Ajouter un document d\'identification'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddIdDoc(),
-                          ),
-                        );
-                      },
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    ListTile(
-                      leading: new Icon(Icons.wallet_travel),
-                      title: new Text('Ajouter un document de voyage'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddTravelDoc(),
-                          ),
-                        );
-                      },
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    ListTile(
-                      leading: new Icon(Icons.health_and_safety),
-                      title: new Text('Ajouter un passe sanitaire'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddHealthPass(),
-                          ),
-                        );
-                      },
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    ListTile(
-                      leading: new Icon(Icons.document_scanner),
-                      title: new Text('Ajouter un document personnel'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddPersonnalDoc(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              });
-        }
-        if(index==1)
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DocsList(),
-            ),
-          );
-
-        if(index==2) {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: new Icon(FontAwesomeIcons.facebookSquare),
-                      title: new Text('Facebook'),
-                      onTap: () {
-                        share(SocialMedia.facebook);
-                      },
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    ListTile(
-                      leading: new Icon(FontAwesomeIcons.twitterSquare),
-                      title: new Text('Twitter'),
-                      onTap: () {
-                        share(SocialMedia.twitter);
-                      },
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    ListTile(
-                      leading: new Icon(FontAwesomeIcons.linkedin),
-                      title: new Text('LinkedIn'),
-                      onTap: () {
-                        share(SocialMedia.linkedln);
-                      },
-                    ),
-                    const Divider(
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                  ],
-                );
-              });
-        }
-      },
-    ),
         ),
-      ],
+        body: RefreshIndicator(
+          backgroundColor: AppColors.primaryColor,
+          color: AppColors.secondaryColor,
+          onRefresh: homeRefresh,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  'Glisser vers le bas pour actualiser',
+                  style: TextStyle(color: Colors.grey[700], fontSize: 11),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder(
+                  future:  DatabaseState.getMasterData(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    return Theme(
+                      data:
+                      Theme.of(context).copyWith(accentColor: AppColors.primaryColor),
+                      child: ListView.builder(
+                        itemCount: DatabaseState.getData().length,
+                        itemBuilder: (context, index) {
+                          return FocusedMenuHolder(
+                            onPressed:() =>null,
+                            menuWidth: size.width * 0.44,
+                            child: ListTile(
+                              leading: Image.file(
+                                File(DatabaseState.getData()[index]['first_img_path']),
+                                width: 50,
+                                height: 50,
+                              ),
+                              title: Text(
+                                DatabaseState.getData()[index]['new_name'] ?? DatabaseState.getData()[index]['dir_name'],
+                                style: TextStyle(fontSize: 14),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Last Modified: ${DateTime.parse(DatabaseState.getData()[index]['last_modified']).day}-${DateTime.parse(DatabaseState.getData()[index]['last_modified']).month}-${DateTime.parse(DatabaseState.getData()[index]['last_modified']).year}',
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                  Text(
+                                    '${DatabaseState.getData()[index]['image_count']} ${(DatabaseState.getData()[index]['image_count'] == 1) ? 'image' : 'images'}',
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                ],
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_right,
+                                size: 30,
+                                color: AppColors.secondaryColor,
+                              ),
+                              onTap: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewDocument(
+                                      directoryOS: DirectoryOS.fromMap(DatabaseState.getData()[index]),
+                                    ),
+                                  ),
+                                ).whenComplete(() {
+                                  homeRefresh();
+                                });
+                              },
+                            ),
+                            menuItems: [
+                              FocusedMenuItem(
+                                title: Text(
+                                  'Rename',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                trailingIcon: Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  bool isEmptyError = false;
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      String? fileName;
+                                      return StatefulBuilder(
+                                        builder: (BuildContext context,
+                                            void Function(void Function())
+                                            setState) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                            title: Text('Rename File'),
+                                            content: TextField(
+                                              controller: TextEditingController(
+                                                text: fileName ??
+                                                    DatabaseState.getData()[index]['new_name'],
+                                              ),
+                                              onChanged: (value) {
+                                                fileName = value;
+                                              },
+                                              cursorColor: AppColors.secondaryColor,
+                                              textCapitalization:
+                                              TextCapitalization.words,
+                                              decoration: InputDecoration(
+                                                prefixStyle: TextStyle(
+                                                    color: Colors.white),
+                                                focusedBorder:
+                                                UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: AppColors.secondaryColor),
+                                                ),
+                                                errorText: isEmptyError
+                                                    ? 'Error! File name cannot be empty'
+                                                    : null,
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  fileName = fileName!.trim();
+                                                  fileName = fileName!
+                                                      .replaceAll('/', '');
+                                                  if (fileName!.isNotEmpty) {
+                                                    DirectoryOS dir=DirectoryOS.fromMap(DatabaseState.getData()[index]);
+                                                    dir.newName=fileName!;
+                                                    DirectoryOSdao.renameDirectory(
+                                                        directory: dir);
+                                                    Navigator.pop(context);
+                                                    homeRefresh();
+                                                  } else {
+                                                    setState(() {
+                                                      isEmptyError = true;
+                                                    });
+                                                  }
+                                                },
+                                                child: Text(
+                                                  'Save',
+                                                  style: TextStyle(
+                                                      color: AppColors.secondaryColor),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ).whenComplete(() {
+                                    setState(() {});
+                                  });
+                                },
+                              ),
+                              FocusedMenuItem(
+                                title: Text('Delete'),
+                                trailingIcon: Icon(Icons.delete),
+                                backgroundColor: Colors.redAccent,
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10),
+                                          ),
+                                        ),
+                                        title: Text('Delete'),
+                                        content: Text(
+                                            'Do you really want to delete file?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Directory(DatabaseState.getData()[index]['dir_path'])
+                                                  .deleteSync(recursive: true);
+                                              DirectoryOSdao.deleteDirectory(
+                                                  dirPath:
+                                                  DatabaseState.getData()[index]['dir_path']);
+                                              Navigator.pop(context);
+                                              homeRefresh();
+                                            },
+                                            child: Text(
+                                              'Delete',
+                                              style: TextStyle(
+                                                  color: Colors.redAccent),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ).whenComplete(() {
+                                    setState(() {});
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FAB(
+          normalScanOnPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewDocument(
+                  quickScan: false,
+                  directoryOS: DirectoryOS(),
+                ),
+              ),
+            ).whenComplete(() {
+              homeRefresh();
+            });
+          },
+          quickScanOnPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewDocument(
+                  quickScan: true,
+                  directoryOS: DirectoryOS(),
+                ),
+              ),
+            ).whenComplete(() {
+              homeRefresh();
+            });
+          },
+          galleryOnPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewDocument(
+                  quickScan: false,
+                  directoryOS: DirectoryOS(),
+                  fromGallery: true,
+                ),
+              ),
+            ).whenComplete(() {
+              homeRefresh();
+            });
+          },
+        ),
+      ),
+    ),
     );
   }
 }
+

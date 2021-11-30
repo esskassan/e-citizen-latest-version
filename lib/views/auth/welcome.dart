@@ -8,6 +8,7 @@ import 'package:e_citizen/consts/app_colors.dart';
 import 'package:e_citizen/views/auth/login.dart';
 import 'package:e_citizen/views/auth/terms_and_conditions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 const List<String> texts = [
   "XXX est la nouvelle façon d'interagir avec l'administration publique",
@@ -26,6 +27,26 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final CarouselController _controller = CarouselController();
   ValueNotifier<int> index = ValueNotifier(0);
+
+  Future<bool> _requestPermission() async {
+    if (await Permission.storage.request().isGranted &&
+        await Permission.camera.request().isGranted) {
+      return true;
+    }
+    await Permission.storage.request();
+    await Permission.camera.request();
+    return false;
+  }
+
+  void askPermission() async {
+    await _requestPermission();
+  }
+
+
+  @override
+  void initState() {
+    askPermission();
+  }
 
   @override
   Widget build(BuildContext context) {

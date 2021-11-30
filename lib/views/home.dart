@@ -1,6 +1,8 @@
 import 'package:e_citizen/consts/app_assets.dart';
 import 'package:e_citizen/consts/app_styles.dart';
 import 'package:e_citizen/helpers/utils.dart';
+import 'package:e_citizen/models/directory_model.dart';
+import 'package:e_citizen/states/database_state.dart';
 import 'package:e_citizen/states/user_state.dart';
 import 'package:e_citizen/views/add_id_doc.dart';
 import 'package:e_citizen/views/add_personnal_doc.dart';
@@ -8,6 +10,7 @@ import 'package:e_citizen/views/add_personnal_doc.dart';
 import 'package:e_citizen/views/docs_holder.dart';
 import 'package:e_citizen/views/profile.dart';
 import 'package:e_citizen/views/quick_contacts.dart';
+import 'package:e_citizen/views/view_document.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +29,15 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>{
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future homeRefresh() async {
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,12 +171,25 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DocsList(),
-                      ),
-                    );
+                    if(DatabaseState.getData().length>0 && DatabaseState.getData()[0]['image_count']>0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewDocument(
+                            directoryOS: DirectoryOS.fromMap(DatabaseState.getData()[0]),
+                          ),
+                        ),
+                      ).whenComplete(() {
+                        homeRefresh();
+                      });
+                    }else{
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DocsList(),
+                        ),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
@@ -175,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     child: ListTile(
                       title: Text(
-                        "0",
+                        '${DatabaseState.getData().length>0?DatabaseState.getData()[0]['image_count']:0}',
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -185,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       subtitle: Text(
-                        "Documents d'identification",
+                        "${DatabaseState.getData().length>0?DatabaseState.getData()[0]['new_name']:"Document d'identification"}",
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -203,12 +227,25 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DocsList(),
-                      ),
-                    );
+                    if(DatabaseState.getData().length>1 && DatabaseState.getData()[1]['image_count']>0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewDocument(
+                            directoryOS: DirectoryOS.fromMap(DatabaseState.getData()[1]),
+                          ),
+                        ),
+                      ).whenComplete(() {
+                        homeRefresh();
+                      });
+                    }else{
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DocsList(),
+                        ),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
@@ -218,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: ListTile(
                     title: Text(
-                      "0",
+                      '${DatabaseState.getData().length>1?DatabaseState.getData()[1]['image_count']:0}',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -228,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     subtitle: Text(
-                      "Documents de voyage",
+                      "${DatabaseState.getData().length>1?DatabaseState.getData()[1]['new_name']:"Documents de voyage"}",
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -251,12 +288,25 @@ class _HomePageState extends State<HomePage> {
                                 flex: 1,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DocsList(),
-                                      ),
-                                    );
+                                    if(DatabaseState.getData().length>2 && DatabaseState.getData()[2]['image_count']>0) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ViewDocument(
+                                            directoryOS: DirectoryOS.fromMap(DatabaseState.getData()[2]),
+                                          ),
+                                        ),
+                                      ).whenComplete(() {
+                                        homeRefresh();
+                                      });
+                                    }else{
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DocsList(),
+                                        ),
+                                      );
+                                    }
                                   },
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
@@ -266,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Container(
                                     child: ListTile(
                                       title: Text(
-                                        "0",
+                                        '${DatabaseState.getData().length>2?DatabaseState.getData()[2]['image_count']:0}',
                                         textAlign: TextAlign.center,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -276,7 +326,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        "preuves de vaccination",
+                                        "${DatabaseState.getData().length>2?DatabaseState.getData()[2]['new_name']:"preuves de vaccination"}",
                                         textAlign: TextAlign.center,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -294,12 +344,25 @@ class _HomePageState extends State<HomePage> {
                                 flex: 1,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DocsList(),
-                                      ),
-                                    );
+                                    if(DatabaseState.getData().length>3 && DatabaseState.getData()[3]['image_count']>0) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ViewDocument(
+                                            directoryOS: DirectoryOS.fromMap(DatabaseState.getData()[3]),
+                                          ),
+                                        ),
+                                      ).whenComplete(() {
+                                        homeRefresh();
+                                      });
+                                    }else{
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DocsList(),
+                                        ),
+                                      );
+                                    }
                                   },
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(
@@ -311,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.center,
                                     child: ListTile(
                                     title: Text(
-                                      "0",
+                                      '${DatabaseState.getData().length>3?DatabaseState.getData()[3]['image_count']:0}',
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
@@ -321,7 +384,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     subtitle: Text(
-                                      "Documents personnels",
+                                      "${DatabaseState.getData().length>3?DatabaseState.getData()[3]['new_name']:"Documents personnels"}",
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
